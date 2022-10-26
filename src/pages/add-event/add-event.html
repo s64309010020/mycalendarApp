@@ -1,81 +1,36 @@
-import { Component } from '@angular/core';
-import { NavController  } from 'ionic-angular';
-//import { AlertController } from 'ionic-angular';
-//import { Calendar } from '@ionic-native/calendar'
-import { AddEventPage } from '../add-event/add-event';
-@Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
-})
-export class HomePage {
-
-date: any;
-daysInThisMonth: any;
-daysInLastMonth: any;
-daysInNextMonth: any;
-monthNames: string[];
-currentMonth: any;
-currentYear: any;
-currentDate: any;
-eventList: any;
-selectedEven: any;
-isSelected: any;
-
-  constructor(public navCtrl: NavController,
-              //private calendar: Calendar,
-              //private alertCtrl: AlertController           
-    ) {
-
-  }
-
-  getDaysOfMonth() {
-    this.daysInThisMonth = new Array();
-    this.daysInLastMonth = new Array();
-    this.daysInNextMonth = new Array();
-    this.currentMonth = this.monthNames[this.date.getMonth()];
-    this.currentYear = this.date.getFullYear();
-    if(this.date.getMonth() === new Date().getMonth()) {
-      this.currentDate = new Date().getDate();
-    } else {
-      this.currentDate = 999;
-    }
+<ion-header>
+    <ion-navbar color="danger">
+      <ion-title>AddEvent</ion-title>
+    </ion-navbar>
+  </ion-header>
   
-    var firstDayThisMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1).getDay();
-    var prevNumOfDays = new Date(this.date.getFullYear(), this.date.getMonth(), 0).getDate();
-    for(var i = prevNumOfDays-(firstDayThisMonth-1); i <= prevNumOfDays; i++) {
-      this.daysInLastMonth.push(i);
-    }
-  
-    var thisNumOfDays = new Date(this.date.getFullYear(), this.date.getMonth()+1, 0).getDate();
-    for (var ii = 0; ii < thisNumOfDays; ii++) {
-      this.daysInThisMonth.push(ii+1);
-    }
-  
-    var lastDayThisMonth = new Date(this.date.getFullYear(), this.date.getMonth()+1, 0).getDay();
-    //var nextNumOfDays = new Date(this.date.getFullYear(), this.date.getMonth()+2, 0).getDate();
-    for (var iii = 0; iii < (6-lastDayThisMonth); iii++) {
-      this.daysInNextMonth.push(iii+1);
-    }
-    var totalDays = this.daysInLastMonth.length+this.daysInThisMonth.length+this.daysInNextMonth.length;
-    if(totalDays<36) {
-      for(var iiii = (7-lastDayThisMonth); iiii < ((7-lastDayThisMonth)+7); iiii++) {
-        this.daysInNextMonth.push(iiii);
-      }
-    }
-  }
+  <ion-content padding>
+    <form (ngSubmit)="save()">
+      <ion-list>
+        <ion-item>
+          <ion-label floating>ชื่อกิจกรรม</ion-label>
+          <ion-input type="text" [(ngModel)]="event.title" name="event.title"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>สถานที่</ion-label>
+          <ion-input type="text" [(ngModel)]="event.location" name="event.location"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>ข้อความอธิบาย</ion-label>
+          <ion-input type="text" [(ngModel)]="event.message" name="event.message"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>วัน/เดือนปี เริ่มทำกิจกกรม</ion-label>
+          <ion-datetime displayFormat="DD MMM YYYY" pickerFormat="MM/DD/YYYY" [(ngModel)]="event.startDate" name="event.startDate"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>วัน/เดือนปี สิ้นสุดกิจกรรม</ion-label>
+          <ion-datetime displayFormat="DD MMM YYYY" pickerFormat="MM/DD/YYYY" [(ngModel)]="event.endDate" name="event.endDate"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <button ion-button type="submit" full round>บันทึก</button>
+        </ion-item>
+      </ion-list>
+    </form>
+  </ion-content>
 
-  goToLastMonth() {
-    this.date = new Date(this.date.getFullYear(), this.date.getMonth(), 0);
-    this.getDaysOfMonth();
-  }
-
-  goToNextMonth() {
-    this.date = new Date(this.date.getFullYear(), this.date.getMonth()+2, 0);
-    this.getDaysOfMonth();
-  }
-
-  addEvent() {
-    this.navCtrl.push(AddEventPage);
-  }
-
-}
